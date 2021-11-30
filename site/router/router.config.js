@@ -1,6 +1,14 @@
 import { defineAsyncComponent } from 'vue';
 import Home from "../pages/home/index.vue";
 import Doc from "../pages/doc/index.vue";
+import Login from "../pages/login/login.vue";
+import Msite from "../pages/msite/msite.vue";
+import Shop from "../pages/shop/shop.vue";
+import Order from "../pages/order/order.vue";
+import Profile from "../pages/profile/profile.vue";
+import ConfirmOrder from "../pages/confirmOrder/confirmOrder.vue";
+import Payment from "../pages/confirmOrder/children/payment.vue";
+
 import docRouter from '../pages/doc/doc-router';
 // import Material from '../pages/material/index.vue';
 // import materialConfig from '../../material/index';
@@ -17,21 +25,6 @@ const getAsyncComponent = func => {
 }
 
 const LOAD_MAP = {
-  // [Language.CN]: name => {
-  //   return getAsyncComponent(() => import(/* webpackChunkName: "zh-CN" */ `./pages/${name}.vue`))
-  // },
-  // [Language.EN]: name => {
-  //   return getAsyncComponent(() => import(/* webpackChunkName: "en-US" */ `./pages/${name}.vue`))
-  // },
-  // [Language.ES]: name => {
-  //   return getAsyncComponent(() => import(/* webpackChunkName: "es" */ `./pages/${name}.vue`))
-  // },
-  // [Language.FR]: name => {
-  //   return getAsyncComponent(() => import(/* webpackChunkName: "fr-FR" */ `./pages/${name}.vue`))
-  // },
-  // [Language.JP]: name => {
-  //   return getAsyncComponent(() => import(/* webpackChunkName: "jp" */ `./pages/${name}.vue`))
-  // },
 }
 
 const load = (lang, page) => {
@@ -86,6 +79,41 @@ var routes = [
     path: "/home",
     name: 'name',
     component: Home
+  },
+  {
+    path: "/login",
+    name: 'login',
+    component: Login
+  },
+  {
+    path: "/msite",
+    name: 'msite',
+    component: Msite
+  },
+  {
+    path: "/shop",
+    name: 'shop',
+    component: Shop
+  },
+  {
+    path: "/order",
+    name: 'order',
+    component: Order
+  },
+  {
+    path: "/profile",
+    name: 'profile',
+    component: Profile
+  },
+  {
+    path: "/confirm-order",
+    name: 'confirmOrder',
+    component: ConfirmOrder,
+    children: [{
+      path: "/confirm-order/payment",
+      name: 'payment',
+      component: Payment,
+    }]
   },
   {
     path: "/doc",

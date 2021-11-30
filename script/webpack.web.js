@@ -131,6 +131,10 @@ var config = {
       filename: './index.html',
       favicon: './public/lixi-logo.png'
     }),
+    new webpack.DefinePlugin({
+      __VUE_OPTIONS_API__: JSON.stringify(true),
+      __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+    }),
     new VueLoaderPlugin()
   ]
 }
