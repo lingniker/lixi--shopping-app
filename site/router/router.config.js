@@ -73,12 +73,7 @@ var registerRoute =  (nav) => {
 var routes = [
   {
     path: "/",
-    redirect: '/home'
-  },
-  {
-    path: "/home",
-    name: 'name',
-    component: Home
+    redirect: '/msite'
   },
   {
     path: "/login",

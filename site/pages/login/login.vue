@@ -45,7 +45,7 @@
           v-model="passWord"
         />
         <input v-else type="text" placeholder="密码" v-model="passWord" />
-        <div class="button_switch" :class="{ change_to_text: showPassword }">
+        <!-- <div class="button_switch" :class="{ change_to_text: showPassword }">
           <div
             class="circle_button"
             :class="{ trans_to_right: showPassword }"
@@ -53,7 +53,7 @@
           ></div>
           <span>abc</span>
           <span>...</span>
-        </div>
+        </div> -->
       </section>
       <section class="input_container captcha_code_container">
         <input
@@ -71,12 +71,11 @@
         </div>
       </section>
     </form>
-    <p class="login_tips">温馨提示：未注册过的账号，登录时将自动注册</p>
-    <p class="login_tips">注册过的用户可凭账号密码登录</p>
+    <p class="login_tips">温馨提示：可以使用提供的默认账号登录，点击登录即可</p>
+    <p class="login_tips">目前只能通过后台添加用户</p>
     <div class="login_container" @click="mobileLogin">登录</div>
-    <router-link to="/forget" class="to_forget" v-if="!loginWay"
-      >重置密码？</router-link
-    >
+    <a class="to_forget" v-if="!loginWay"
+      >重置密码？</a>
     <alert-tip
       v-if="showAlert"
       :showHide="showAlert"
@@ -109,10 +108,10 @@ export default {
       validate_token: null, //获取短信时返回的验证值，登录时需要
       computedTime: 0, //倒数记时
       userInfo: null, //获取到的用户信息
-      userAccount: null, //用户名
-      passWord: null, //密码
+      userAccount: 'ling', //用户名
+      passWord: '123456', //密码
       captchaCodeImg: null, //验证码地址
-      codeNumber: null, //验证码
+      codeNumber: 1234, //验证码
       showAlert: false, //显示提示组件
       alertText: null, //提示的内容
     };
@@ -142,8 +141,9 @@ export default {
     },
     //获取验证吗，线上环境使用固定的图片，生产环境使用真实的验证码
     async getCaptchaCode() {
-      let res = await getcaptchas();
-      this.captchaCodeImg = res.code;
+      // let res = await getcaptchas();
+      // this.captchaCodeImg = res.code;
+      this.codeNumber += 211
     },
     //获取短信验证码
     async getVerifyCode() {

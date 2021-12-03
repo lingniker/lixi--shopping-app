@@ -442,7 +442,7 @@ export const exChangeHongbao = (id, exchange_code, captcha_code) => fetch('/v1/u
  * 获取用户信息
  */
 
-// export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
+export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
 
 
 /**
@@ -499,7 +499,7 @@ export const deleteAddress = (userid, addressid) => fetch( '/v1/users/' + userid
 /**
  * 账号密码登录
  */
-export const accountLogin = (username, password, captcha_code) => fetch('/v2/login', {username, password, captcha_code}, 'POST');
+export const accountLogin = (user_name, password, captcha_code) => fetch('/login', {user_name, password, login_type: 'user'}, 'POST');
 
 
 /**
