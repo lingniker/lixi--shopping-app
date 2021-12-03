@@ -7,7 +7,7 @@
         goBack="true"
         signin-up="confirmOrder"
       ></head-top>
-      <router-link
+      <div
         :to="{
           path: '/confirmOrder/chooseAddress',
           query: { id: checkoutData.cart.id, sig: checkoutData.sig },
@@ -26,9 +26,9 @@
           </div>
           <div v-else class="address_detail_container">
             <header>
-              <span>{{ choosedAddress.name }}</span>
-              <span>{{ choosedAddress.sex == 1 ? "先生" : "女士" }}</span>
-              <span>{{ choosedAddress.phone }}</span>
+              <span>{{ userInfo?.user_name }}</span>
+              <span>{{ userInfo?.sex == 2 ?   "女士" : "先生 " }}</span>
+              <span>{{ userInfo?.mobile }}</span>
             </header>
             <div class="address_detail">
               <span
@@ -36,7 +36,7 @@
                 :style="{ backgroundColor: iconColor(choosedAddress.tag) }"
                 >{{ choosedAddress.tag }}</span
               >
-              <p>{{ choosedAddress.address_detail }}</p>
+              <p>{{ userInfo?.address_name }}</p>
             </div>
           </div>
         </div>
@@ -46,7 +46,7 @@
             xlink:href="#arrow-right"
           ></use>
         </svg>
-      </router-link>
+      </div>
       <section class="delivery_model container_style">
         <p class="deliver_text">送达时间</p>
         <section class="deliver_time">
@@ -69,26 +69,24 @@
         </header>
         <section class="hongbo">
           <span>红包</span>
-          <span>暂时只在饿了么 APP 中支持</span>
+          <span>暂时只在 APP 中支持</span>
         </section>
       </section>
       <section class="food_list">
-        <header v-if="checkoutData.cart.restaurant_info">
+        <header v-if="checkoutData.cart.restaurant_info && foods">
           <img
-            :src="imgBaseUrl + checkoutData.cart.restaurant_info.image_path"
+            :src="imgBaseUrl + foods.img_path"
           />
-          <span>{{ checkoutData.cart.restaurant_info.name }}</span>
+          <span> {{ foods.describe }}</span>
         </header>
         <ul class="food_list_ul" v-if="checkoutData.cart.groups">
           <li
-            v-for="item in checkoutData.cart.groups[0]"
-            :key="item.id"
             class="food_item_style"
           >
-            <p class="food_name ellipsis">{{ item.name }}</p>
+            <p class="food_name ellipsis">{{ foods.shop_name }}</p>
             <div class="num_price">
-              <span>x {{ item.quantity }}</span>
-              <span>¥{{ item.price }}</span>
+              <span>x 1</span>
+              <span>¥{{ foods.price }}</span>
             </div>
           </li>
         </ul>
@@ -102,21 +100,21 @@
           </div>
         </div>
         <div class="food_item_style">
-          <p class="food_name ellipsis">配送费</p>
+          <p class="food_name ellipsis">运费</p>
           <div class="num_price">
             <span></span>
-            <span>¥ {{ checkoutData.cart.deliver_amount || 0 }}</span>
+            <span>¥ {{ 0 }}</span>
           </div>
         </div>
         <div class="food_item_style total_price">
-          <p class="food_name ellipsis">订单 ¥{{ checkoutData.cart.total }}</p>
+          <p class="food_name ellipsis">订单 ¥{{ foods.price }}</p>
           <div class="num_price">
-            <span>待支付 ¥{{ checkoutData.cart.total }}</span>
+            <span>待支付 ¥{{ foods.price }}</span>
           </div>
         </div>
       </section>
       <section class="pay_way container_style">
-        <router-link
+        <div
           :to="{
             path: '/confirmOrder/remark',
             query: { id: checkoutData.cart.id, sig: checkoutData.sig },
@@ -135,8 +133,8 @@
               ></use>
             </svg>
           </div>
-        </router-link>
-        <router-link
+        </div>
+        <div
           :to="checkoutData.invoice.is_available ? '/confirmOrder/invoice' : ''"
           class="hongbo"
           :class="{ support_is_available: checkoutData.invoice.is_available }"
@@ -151,10 +149,10 @@
               ></use>
             </svg>
           </span>
-        </router-link>
+        </div>
       </section>
       <section class="confrim_order">
-        <p>待支付 ¥{{ checkoutData.cart.total }}</p>
+        <p>待支付 ¥{{ foods.price }}</p>
         <p @click="confrimOrder">确认下单</p>
       </section>
       <transition name="fade">
@@ -189,7 +187,7 @@
         </div>
       </transition>
     </section>
-    <loading v-if="showLoading"></loading>
+    <!-- <loading v-if="showLoading"></loading> -->
     <alert-tip
       v-if="showAlert"
       @closeTip="showAlert = false"
@@ -211,11 +209,25 @@ import {
   getAddress,
   placeOrders,
   getAddressList,
+  validateOrders
 } from "@site/api/getData";
 import { imgBaseUrl } from "@site/config/env";
 
 export default {
   data() {
+    var userInfo = null;
+    if (window.sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    }
+    var foods = null;
+    if (window.sessionStorage.getItem('foods')) {
+      foods = JSON.parse(window.sessionStorage.getItem('foods'))
+    }
+    var order = null;
+    if (window.sessionStorage.getItem('order')) {
+      order = JSON.parse(window.sessionStorage.getItem('order'))
+    }
+    console.log('foods', foods)
     return {
       geohash: "", //geohash位置信息
       shopId: null, //商店id值
@@ -232,7 +244,9 @@ export default {
       "inputText": '',
       "invoice": '',
       "choosedAddress": {},
-      "userInfo": {},
+      "userInfo": userInfo,
+      "foods": foods,
+      order: order
     };
   },
   created() {
@@ -358,7 +372,32 @@ export default {
     },
     //确认订单
     async confrimOrder() {
-      this.$router.push("/confirm-order/payment");
+      if (this.userInfo.id) {
+        if (this.order) {
+            this.$router.push("/confirm-order/payment");
+          } else {
+          var data = {
+            user_id: this.userInfo.id,
+            user_name: this.userInfo.user_name,
+            user_address_id: this.userInfo.address_id,
+            user_address_name: this.userInfo.address_name,
+            shop_id: this.foods.id,
+            shop_name: this.foods.shop_name,
+            shop_address_name: this.foods.address_name,
+            shop_address_id: this.foods.address_id,
+            shop_number: '1',
+            shop_price: this.foods.price,
+            shop_price_total: this.foods.price,
+          }
+          validateOrders(data).then((data)=>{
+            window.sessionStorage.setItem('order', JSON.stringify(data))
+            this.$router.push("/confirm-order/payment");
+          })
+        }
+      } else {
+        this.showAlert = true
+        this.alertText = '请登录'
+      }
       //用户未登录时弹出提示框
       // if (!(this.userInfo && this.userInfo.user_id)) {
       //   this.showAlert = true;
@@ -431,7 +470,7 @@ export default {
   @include fj;
   align-items: center;
   padding: 0 0.6rem;
-  background: url(../../images/address_bottom.png) left bottom repeat-x;
+  background: url(/images/address_bottom.png) left bottom repeat-x;
   background-color: #fff;
   background-size: auto 0.12rem;
   .address_empty_left {

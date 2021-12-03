@@ -96,6 +96,7 @@ import {
   sendLogin,
   getcaptchas,
   accountLogin,
+  createOrder
 } from "../../api/getData";
 
 export default {
@@ -216,12 +217,14 @@ export default {
         );
       }
       //如果返回的值不正确，则弹出提示框，返回的值正确则返回上一页
-      if (!this.userInfo.user_id) {
+      // console.log('---', this.userInfo)
+      if (!this.userInfo.id) {
         this.showAlert = true;
         this.alertText = this.userInfo.message;
         if (!this.loginWay) this.getCaptchaCode();
       } else {
-        this.RECORD_USERINFO(this.userInfo);
+        // this.RECORD_USERINFO(this.userInfo);
+        window.sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo))
         this.$router.go(-1);
       }
     },

@@ -160,9 +160,9 @@ export default {
     //关闭提示框，跳转到订单列表页
     closeTipFun() {
       this.showAlert = false;
-      if (this.gotoOrders) {
-        this.$router.push("/order");
-      }
+      // if (this.gotoOrders) {
+      //   this.$router.push("/order");
+      // }
     },
   },
 };

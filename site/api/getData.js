@@ -355,28 +355,28 @@ export const rePostVerify = (cart_id, sig, type) => fetch('/v1/carts/' + cart_id
  * 下订单
  */
 
-export const validateOrders = ({
-	user_id,
-	cart_id,
-	address_id,
-	description,
-	entities,
-	geohash,
-	sig,
-	validation_code,
-	validation_token
-}) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
-	address_id,
-	come_from: "mobile_web",
-	deliver_time: "",
-	description,
-	entities,
-	geohash,
-	paymethod_id: 1,
-	sig,
-	validation_code,
-	validation_token,
-}, 'POST');
+// export const validateOrders = ({
+// 	user_id,
+// 	cart_id,
+// 	address_id,
+// 	description,
+// 	entities,
+// 	geohash,
+// 	sig,
+// 	validation_code,
+// 	validation_token
+// }) => fetch('/v1/users/' + user_id + '/carts/' + cart_id + '/orders', {
+// 	address_id,
+// 	come_from: "mobile_web",
+// 	deliver_time: "",
+// 	description,
+// 	entities,
+// 	geohash,
+// 	paymethod_id: 1,
+// 	sig,
+// 	validation_code,
+// 	validation_token,
+// }, 'POST');
 
 
 /**
@@ -512,6 +512,28 @@ export const signout = () => fetch('/v2/signout');
  * 改密码
  */
 export const changePassword = (username, oldpassWord, newpassword, confirmpassword, captcha_code) => fetch('/v2/changepassword', {username, oldpassWord, newpassword, confirmpassword, captcha_code}, 'POST');
+
+/**
+ * 获取shop商品列表
+ */
+export const getShop = (data) => {
+	return request({
+		url: '/shop',
+		method: 'get',
+		data: data
+	})
+}
+
+/**
+ * 下订单
+ */
+export const validateOrders = (data) => {
+	return request({
+		url: '/order/create',
+		method: 'post',
+		data: data
+	})
+}
 
 export default {
 	api,

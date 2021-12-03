@@ -22,88 +22,37 @@
             :key="foodindex"
             class="menu_detail_list"
           >
-            <router-link
-              :to="{
-                path: 'shop/foodDetail',
-                query: {
-                  image_path: foods.image_path,
+          <!-- image_path: foods.image_path,
                   description: foods.description,
                   month_sales: foods.month_sales,
                   name: foods.name,
                   rating: foods.rating,
                   rating_count: foods.rating_count,
-                  satisfy_rate: foods.satisfy_rate,
-                  foods,
-                  shopId,
-                },
-              }"
+                  satisfy_rate: foods.satisfy_rate, -->
+            <div
               tag="div"
               class="menu_detail_link"
+              @click="() => { goToShop(foods) }"
             >
               <section class="menu_food_img">
-                <img :src="foods.image_path" />
+                <img :src="'http://127.0.0.1:8035/img/' + foods.img_path" />
               </section>
               <section class="menu_food_description">
                 <h3 class="food_description_head">
-                  <strong class="description_foodname">{{ foods.name }}</strong>
-                  <ul v-if="foods.attributes.length" class="attributes_ul">
-                    <li
-                      v-if="attribute"
-                      v-for="(attribute, foodindex) in foods.attributes"
-                      :key="foodindex"
-                      :style="{
-                        color: '#' + attribute.icon_color,
-                        borderColor: '#' + attribute.icon_color,
-                      }"
-                      :class="{ attribute_new: attribute.icon_name == '新' }"
-                    >
-                      <p
-                        :style="{
-                          color:
-                            attribute.icon_name == '新'
-                              ? '#fff'
-                              : '#' + attribute.icon_color,
-                        }"
-                      >
-                        {{
-                          attribute.icon_name == "新"
-                            ? "新品"
-                            : attribute.icon_name
-                        }}
-                      </p>
-                    </li>
-                  </ul>
+                  <strong class="description_foodname">{{ foods.shop_name }}</strong>
                 </h3>
-                <p class="food_description_content">{{ foods.description }}</p>
+                <p class="food_description_content">{{ foods.describe }}</p>
                 <p class="food_description_sale_rating">
-                  <span>月售{{ foods.month_sales }}份</span>
-                  <span>好评率{{ foods.satisfy_rate }}%</span>
-                </p>
-                <p v-if="foods.activity" class="food_activity">
-                  <span
-                    :style="{
-                      color: '#' + foods.activity.image_text_color,
-                      borderColor: '#' + foods.activity.icon_color,
-                    }"
-                    >{{ foods.activity.image_text }}</span
-                  >
+                  <span>月售{{ foods.sales_volume }}份</span>
+                  <span>好评率 80%</span>
                 </p>
               </section>
-            </router-link>
+            </div>
             <footer class="menu_detail_footer">
               <section class="food_price">
                 <span>¥</span>
-                <span>{{ foods.specfoods[0].price }}</span>
-                <span v-if="foods.specifications.length">起</span>
+                <span>{{ foods.price }}</span>
               </section>
-              <buy-cart
-                :shopId="shopId"
-                :foods="foods"
-                @moveInCart="listenInCart"
-                @showChooseList="showChooseList"
-                @showReduceTip="showReduceTip"
-                @showMoveDot="showMoveDotFun"
-              ></buy-cart>
             </footer>
           </section>
         </li>
@@ -119,7 +68,7 @@
 import headTop from "@site/components/header/head";
 import footGuide from "@site/components/footer/footGuide";
 import shopList from "@site/components/common/shoplist";
-import { msiteAddress, msiteFoodTypes, cityGuess } from "@site/api/getData";
+import { msiteAddress, msiteFoodTypes, cityGuess, getShop } from "@site/api/getData";
 import "@site/plugins/swiper.min.js";
 import "@site/style/swiper.min.css";
 
@@ -216,7 +165,10 @@ export default {
 
     // this.hasGetData = true;
   },
-  // mounted() {
+  mounted() {
+    getShop({}).then((res)=>{
+      this.menuList[0].foods = res.row
+    })
   //   //获取导航食品类型列表
   //   msiteFoodTypes(this.geohash)
   //     .then((res) => {
@@ -235,7 +187,7 @@ export default {
   //         loop: true,
   //       });
   //     });
-  // },
+  },
   components: {
     headTop,
     shopList,
@@ -255,6 +207,11 @@ export default {
         return "";
       }
     },
+    goToShop(foods){
+      window.sessionStorage.setItem('foods', JSON.stringify(foods))
+      window.sessionStorage.setItem('order', '')
+      this.$router.push('shop')
+    }
   },
   watch: {},
 };
@@ -400,7 +357,7 @@ export default {
       .menu_food_img {
         margin-right: 0.4rem;
         img {
-          @include wh(2rem, 2rem);
+          @include wh(2.5rem, 2.5rem);
           display: block;
         }
       }
@@ -472,7 +429,7 @@ export default {
       }
     }
     .menu_detail_footer {
-      margin-left: 2.4rem;
+      margin-left: 2.9rem;
       font-size: 0;
       margin-top: 0.3rem;
       @include fj;

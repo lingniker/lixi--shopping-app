@@ -20,12 +20,13 @@
       v-if="signinUp"
       class="head_login"
     >
-      <svg class="user_avatar" v-if="userInfo">
-        <use
+      <div class="user_avatar" v-if="userInfo">
+        <!-- <use
           xmlns:xlink="http://www.w3.org/1999/xlink"
           xlink:href="#user"
-        ></use>
-      </svg>
+        ></use> -->
+        {{ userInfo.user_name }}
+      </div>
       <span class="login_span" v-else>登录|注册</span>
     </router-link>
     <section class="title_head ellipsis" v-if="headTitle">
@@ -42,7 +43,13 @@
 // import { mapState, mapActions } from "vuex";
 export default {
   data() {
-    return {};
+    var userInfo = null
+    if(window.sessionStorage.getItem('userInfo')){
+      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    }
+    return {
+      userInfo
+    };
   },
   mounted() {
     //获取用户信息
@@ -83,6 +90,7 @@ export default {
     color: #fff;
   }
   .user_avatar {
+    color: #fff;
     fill: #fff;
     @include wh(0.8rem, 0.8rem);
   }

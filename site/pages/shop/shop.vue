@@ -8,12 +8,12 @@
       </nav>
       <header class="shop_detail_header" ref="shopheader" :style="{ zIndex: showActivities ? '14' : '10' }">
         <div class="header_cover_img_con">
-          <img :src="imgBaseUrl + shopDetailData.image_path" class="header_cover_img"/>
+          <img :src="imgBaseUrl + shopDetailData.img_path" class="header_cover_img"/>
         </div>
         <section class="description_header">
           <router-link to="/shop/shopDetail" class="description_top">
             <section class="description_left">
-              <img :src="imgBaseUrl + shopDetailData.image_path" />
+              <img :src="imgBaseUrl + shopDetailData.img_path" />
             </section>
             <section class="description_right">
               <h4 class="description_title ellipsis">
@@ -199,7 +199,7 @@
                       :to="{
                         path: 'shop/foodDetail',
                         query: {
-                          image_path: foods.image_path,
+                          img_path: foods.img_path,
                           description: foods.description,
                           month_sales: foods.month_sales,
                           name: foods.name,
@@ -214,7 +214,7 @@
                       class="menu_detail_link"
                     >
                       <section class="menu_food_img">
-                        <img :src="imgBaseUrl + foods.image_path" />
+                        <img :src="imgBaseUrl + foods.img_path" />
                       </section>
                       <section class="menu_food_description">
                         <h3 class="food_description_head">
@@ -563,7 +563,34 @@
         多规格商品只能去购物车删除哦
       </p>
     </transition>
-    <div>详情</div>
+    <div class="rating_page">
+        <head-top :head-title="name" go-back='true'></head-top>
+        <section class="header_img">
+            <img :src="imgBaseUrl + img_path" class="food_img">
+            <div class="cover"></div>
+        </section>
+        <p class="description">{{description}}</p>
+        <section class="detail_container">
+            <section class="detail_left">
+                <p>{{name}}</p>
+                <div class="rating_sale">
+                    <span>评分</span>
+                    <rating-star :rating='rating'></rating-star>
+                    <span>{{rating}}</span>
+                </div>
+                <p>
+                    <span>月售 {{month_sales}}单</span>
+                    <span>售价 ¥{{foods.price}}</span>
+                </p>
+                <p>
+                    <span>评论数 {{rating_count}}</span>
+                    <span>好评率 {{satisfy_rate}}%</span>
+                </p>    
+            </section>
+            <!-- <buy-cart :shopId='shopId'  :foods='foods' @moveInCart="$emit('moveInCart')"></buy-cart> -->
+        </section>
+    </div>
+    <!-- <div>详情</div> -->
     <section class="buy_cart_container">
       <section @click="toggleCartList" class="cart_icon_num">
         <div
@@ -586,7 +613,7 @@
         </div>
         <div class="cart_num">
           <div>¥ {{ totalPrice }}</div>
-          <div>配送费¥{{ deliveryFee }}</div>
+          <div>运费¥0</div>
         </div>
       </section>
       <section
@@ -597,11 +624,10 @@
           >还差¥{{ minimumOrderAmount }}起送</span
         >
         <router-link
-          :to="{ path: '/confirmOrder', query: { geohash, shopId } }"
+          :to="{ path: '/confirm-order', query: { geohash, shopId } }"
           class="gotopay_button_style"
           v-else
-          >去结算</router-link
-        >
+        >去结算</router-link>
       </section>
     </section>
     <!-- <transition
@@ -649,6 +675,7 @@ import ratingStar from "@site/components/common/ratingStar";
 import { loadMore, getImgPath } from "@site/components/common/mixin";
 import { imgBaseUrl } from "@site/config/env";
 import BScroll from "better-scroll";
+import headTop from '@site/components/header/head'
 
 import './index.scss'
 
@@ -690,13 +717,35 @@ export default {
       elBottom: 0, //当前点击加按钮在网页中的绝对left值
       ratingScroll: null, //评论页Scroll
       imgBaseUrl,
-      "latitude": '', "longitude": '', "cartList":[]
+      "latitude": '',
+      "longitude": '',
+      "cartList":[],
+      foods: {},
+      img_path: null,
+      description: null,
+      month_sales: null,
+      name: null,
+      rating: null,
+      rating_count: null,
+      satisfy_rate: null,
+      shopId: null,
     };
   },
   created() {
+    var foods =  JSON.parse(window.sessionStorage.getItem('foods'))
     this.geohash = this.$route.query.geohash;
     this.shopId = this.$route.query.id;
     // this.INIT_BUYCART();
+    this.img_path = foods.img_path;
+    this.description = foods.describe;
+    this.month_sales = foods.sales_volume;
+    this.name = foods.shop_name;
+    this.rating = '4.5';
+    this.rating_count = 66;
+    this.satisfy_rate = 92;
+    this.foods = foods;
+    this.shopId = foods.shopId;
+    this.totalPrice = foods.price
   },
   mounted() {
     this.initData();
@@ -710,6 +759,7 @@ export default {
     loading,
     ratingStar,
     buyCart,
+    headTop
   },
   computed: {
     // ...mapState(["latitude", "longitude", "cartList"]),

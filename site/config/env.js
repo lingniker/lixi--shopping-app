@@ -9,15 +9,15 @@
 
 let baseUrl = ''; 
 let routerMode = 'hash';
-let imgBaseUrl = '';
+let imgBaseUrl = 'http://127.0.0.1:8035/img/';
 
 
 if (process.env.NODE_ENV == 'development') {
-    imgBaseUrl = '/img/';
+    imgBaseUrl = 'http://127.0.0.1:8035/img/';
 
 }else if(process.env.NODE_ENV == 'production'){
 	baseUrl = '//localhost:8001';
-    imgBaseUrl = '//localhost:8001/img/';
+  imgBaseUrl = 'http://127.0.0.1:8035/img/';
 }
 
 export {
