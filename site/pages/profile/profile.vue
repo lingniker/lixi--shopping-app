@@ -4,7 +4,7 @@
     <section>
       <section class="profile-number">
         <router-link
-          :to="userInfo && userInfo.user_id ? '/profile/info' : '/login'"
+          :to="userInfo && userInfo.id ? '/profile' : '/login'"
           class="profile-link"
         >
           <img
@@ -21,7 +21,7 @@
             </svg>
           </span>
           <div class="user-info">
-            <p>{{ username }}</p>
+            <p>{{ userInfo.user_name ? userInfo.user_name : "登录/注册" }}</p>
             <p>
               <span class="user-icon">
                 <svg class="icon-mobile" fill="#fff">
@@ -31,7 +31,7 @@
                   ></use>
                 </svg>
               </span>
-              <span class="icon-mobile-number">{{ mobile }}</span>
+              <span class="icon-mobile-number">{{ userInfo.mobile ? userInfo.mobile : "暂无绑定手机号" }}</span>
             </p>
           </div>
           <span class="arrow">
@@ -46,27 +46,27 @@
       </section>
       <section class="info-data">
         <ul class="clear">
-          <router-link to="/balance" tag="li" class="info-data-link">
+          <div to="/balance" tag="li" class="info-data-link">
             <span class="info-data-top"
-              ><b>{{ parseInt(balance).toFixed(2) }}</b
+              ><b>{{ parseInt(userInfo.money ? userInfo.money : 0 ).toFixed(2) }}</b
               >元</span
             >
             <span class="info-data-bottom">我的余额</span>
-          </router-link>
-          <router-link to="/benefit" tag="li" class="info-data-link">
+          </div>
+          <!-- <div to="/benefit" tag="li" class="info-data-link">
             <span class="info-data-top"
               ><b>{{ count }}</b
               >个</span
             >
             <span class="info-data-bottom">我的优惠</span>
-          </router-link>
-          <router-link to="/points" tag="li" class="info-data-link">
+          </div> -->
+          <div to="/points" tag="li" class="info-data-link">
             <span class="info-data-top"
               ><b>{{ pointNumber }}</b
               >分</span
             >
             <span class="info-data-bottom">我的积分</span>
-          </router-link>
+          </div>
         </ul>
       </section>
       <section class="profile-1reTe">
@@ -93,7 +93,7 @@
           </div>
         </router-link>
         <!-- 积分商城 -->
-        <a href="https://home.m.duiba.com.cn/#/chome/index" class="myorder">
+        <div href="https://home.m.duiba.com.cn/#/chome/index" class="myorder">
           <aside>
             <svg fill="#fc7b53">
               <use
@@ -113,9 +113,9 @@
               </svg>
             </span>
           </div>
-        </a>
+        </div>
         <!-- 会员卡 -->
-        <router-link to="/vipcard" class="myorder">
+        <div to="/vipcard" class="myorder">
           <aside>
             <svg fill="#ffc636">
               <use
@@ -135,11 +135,11 @@
               </svg>
             </span>
           </div>
-        </router-link>
+        </div>
       </section>
       <section class="profile-1reTe">
         <!-- 服务中心 -->
-        <router-link to="/service" class="myorder">
+        <div to="/service" class="myorder">
           <aside>
             <svg fill="#4aa5f0">
               <use
@@ -159,9 +159,9 @@
               </svg>
             </span>
           </div>
-        </router-link>
+        </div>
         <!-- 下载APP -->
-        <router-link to="/download" class="myorder">
+        <div to="/download" class="myorder">
           <aside>
             <svg fill="#3cabff">
               <use
@@ -181,7 +181,7 @@
               </svg>
             </span>
           </div>
-        </router-link>
+        </div>
       </section>
     </section>
     <foot-guide></foot-guide>
@@ -200,17 +200,22 @@ import { getImgPath } from "@site/components/common/mixin";
 
 export default {
   data() {
+    var userInfo = {};
+    if (window.sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    }
+    console.log('userInfo', userInfo)
     return {
       profiletitle: "我的",
-      username: "登录/注册", //用户名
+      username: userInfo.user_name ? userInfo.user_name : "登录/注册", //用户名
       resetname: "",
-      mobile: "暂无绑定手机号", //电话号码
+      mobile: userInfo.mobile ? userInfo.mobile : "暂无绑定手机号", //电话号码
       balance: 0, //我的余额
       count: 0, //优惠券个数
       pointNumber: 0, //积分数
       avatar: "", //头像地址
       imgBaseUrl,
-      userInfo: {}
+      userInfo: userInfo
     };
   },
   mounted() {
@@ -331,7 +336,7 @@ export default {
   ul {
     .info-data-link {
       float: left;
-      width: 33.33%;
+      width: 50%;
       display: inline-block;
       border-right: 1px solid #f1f1f1;
       span {

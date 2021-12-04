@@ -379,17 +379,17 @@ export const rePostVerify = (cart_id, sig, type) => fetch('/v1/carts/' + cart_id
 // }, 'POST');
 
 
-/**
- * 重新发送订单验证码
- */
+// /**
+//  * 重新发送订单验证码
+//  */
 
-export const payRequest = (merchantOrderNo, userId) => fetch('/payapi/payment/queryOrder', {
-	merchantId: 5,
-	merchantOrderNo,
-	source: 'MOBILE_WAP',
-	userId,
-	version: '1.0.0',
-});
+// export const payRequest = (merchantOrderNo, userId) => fetch('/payapi/payment/queryOrder', {
+// 	merchantId: 5,
+// 	merchantOrderNo,
+// 	source: 'MOBILE_WAP',
+// 	userId,
+// 	version: '1.0.0',
+// });
 
 
 
@@ -460,10 +460,10 @@ export const getUser = () => fetch('/v1/user', {user_id: getStore('user_id')});
  * 获取订单列表
  */
 
-export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
-	limit: 10,
-	offset,
-});
+// export const getOrderList = (user_id, offset) => fetch('/bos/v2/users/' + user_id + '/orders', {
+// 	limit: 10,
+// 	offset,
+// });
 
 
 /**
@@ -533,6 +533,29 @@ export const validateOrders = (data) => {
 		method: 'post',
 		data: data
 	})
+}
+
+// 查询用户列表
+export function getOrderList(query) {
+	console.log('query', query)
+  return request({
+    url: '/order',
+    method: 'get',
+    params: query
+  })
+}
+
+/**
+ * 付费
+ */
+
+export function payRequest(query) {
+	// console.log('query', query)
+  return request({
+    url: '/order/pay',
+    method: 'POST',
+    data: query
+  })
 }
 
 export default {

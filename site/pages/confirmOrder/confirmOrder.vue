@@ -153,7 +153,7 @@
       </section>
       <section class="confrim_order">
         <p>待支付 ¥{{ foods.price }}</p>
-        <p @click="confrimOrder">确认下单</p>
+        <p @click="confrimOrder">{{ order.order_status === '2' ? (order.seed_status === '2' ? '待发货' : '订单完成') : '确认下单' }}</p>
       </section>
       <transition name="fade">
         <div class="cover" v-if="showPayWay" @click="showPayWayFun"></div>
@@ -215,19 +215,25 @@ import { imgBaseUrl } from "@site/config/env";
 
 export default {
   data() {
-    var userInfo = null;
+    var userInfo = {};
     if (window.sessionStorage.getItem('userInfo')) {
       userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
     }
-    var foods = null;
+    var foods = {};
     if (window.sessionStorage.getItem('foods')) {
       foods = JSON.parse(window.sessionStorage.getItem('foods'))
     }
-    var order = null;
+    var order = {};
     if (window.sessionStorage.getItem('order')) {
       order = JSON.parse(window.sessionStorage.getItem('order'))
+      foods.id = order.shop_id
+      foods.shop_name = order.shop_name 
+      foods.address_name = order.shop_address_name 
+      foods.address_id = order.shop_address_id 
+      foods.price = order.shop_price
+      foods.price = order.shop_price_total
     }
-    console.log('foods', foods)
+    // console.log('foods', foods)
     return {
       geohash: "", //geohash位置信息
       shopId: null, //商店id值
@@ -373,8 +379,14 @@ export default {
     //确认订单
     async confrimOrder() {
       if (this.userInfo.id) {
-        if (this.order) {
-            this.$router.push("/confirm-order/payment");
+        if (this.order.id) {
+            if (this.order.order_status === '1') { // 1未支付
+              this.$router.push("/confirm-order/payment");
+            } else {
+              if (this.order.seed == '3') {
+                console.log('订单完成')
+              }
+            }
           } else {
           var data = {
             user_id: this.userInfo.id,
@@ -385,9 +397,9 @@ export default {
             shop_name: this.foods.shop_name,
             shop_address_name: this.foods.address_name,
             shop_address_id: this.foods.address_id,
-            shop_number: '1',
             shop_price: this.foods.price,
             shop_price_total: this.foods.price,
+            shop_number: '1',
           }
           validateOrders(data).then((data)=>{
             window.sessionStorage.setItem('order', JSON.stringify(data))

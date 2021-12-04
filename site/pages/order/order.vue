@@ -14,7 +14,7 @@
             <header class="order_item_right_header">
               <section class="order_header">
                 <h4>
-                  <span class="ellipsis">{{ item.restaurant_name }} </span>
+                  <span class="ellipsis">{{ item.shop_name }} </span>
                   <svg fill="#333" class="arrow_right">
                     <use
                       xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -22,30 +22,25 @@
                     ></use>
                   </svg>
                 </h4>
-                <p class="order_time">{{ item.formatted_created_at }}</p>
+                <p class="order_time">{{ item.created_at }}</p>
               </section>
               <p class="order_status">
-                {{ item.status_bar.title }}
+                {{ item.send_label }}
               </p>
             </header>
             <section class="order_basket">
               <p class="order_name ellipsis">
-                {{ item.basket.group[0][0].name
-                }}{{
-                  item.basket.group[0].length > 1
-                    ? " 等" + item.basket.group[0].length + "件商品"
-                    : ""
-                }}
+                {{ item.shop_name }}
               </p>
-              <p class="order_amount">¥{{ item.total_amount.toFixed(2) }}</p>
+              <p class="order_amount">¥{{ item.shop_price_total }}</p>
             </section>
           </section>
           <div class="order_again">
             <compute-time
-              v-if="item.status_bar.title == '等待支付'"
+              v-if="item.send_label == '等待支付'"
               :time="item.time_pass"
             ></compute-time>
-            <router-link
+            <!-- <router-link
               :to="{
                 path: '/shop',
                 query: { geohash, id: item.restaurant_id },
@@ -54,7 +49,7 @@
               class="buy_again"
               v-else
               >再来一单</router-link
-            >
+            > -->
           </div>
         </section>
       </li>
@@ -76,24 +71,29 @@ import headTop from "@site/components/header/head";
 // import loading from "@site/components/common/loading";
 // import { getImgPath } from "@site/components/common/mixin";
 import footGuide from "@site/components/footer/footGuide";
-// import { getOrderList } from "@site/api/getData";
+import { getOrderList } from "@site/api/getData";
 // import { loadMore } from "@site/components/common/mixin";
 // import { imgBaseUrl } from "@site/config/env";
 
 export default {
   data() {
+    var userInfo = null;
+    if (window.sessionStorage.getItem('userInfo')) {
+      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    }
     return {
       // orderList: null, //订单列表
-      orderList: [{"_id":"61a5713424d5d647a804fa07","restaurant_id":2,"restaurant_image_url":"17d6ae939c71.png","restaurant_name":"测试商铺","formatted_created_at":"2021-11-30 08:32","order_time":1638232372652,"time_pass":21,"total_amount":64,"total_quantity":1,"unique_id":6,"id":6,"user_id":2,"address_id":2,"__v":0,"top_show":0,"timeline_node":{"in_processing":0,"actions":[]},"status_code":0,"status_bar":{"color":"f60","image_type":"","sub_title":"15分钟内支付","title":"等待支付"},"restaurant_type":0,"remind_reply_count":0,"rated_point":0,"pay_remain_seconds":0,"operation_upload_photo":0,"operation_rebuy":2,"operation_rate":0,"operation_pay":0,"operation_confirm":0,"is_pindan":0,"is_new_pay":1,"is_deletable":1,"is_brand":0,"basket":{"pindan_map":[],"packing_fee":{"price":0,"quantity":1,"name":"餐盒","category_id":1},"group":[[{"name":"超级美食","price":20,"quantity":3,"_id":"61a5711224d5d647a804fa05","specs":[""],"new_specs":[],"attrs":[]}]],"extra":[],"deliver_fee":{"quantity":1,"price":4,"name":"配送费","category_id":2},"abandoned_extra":[]}}]
+      orderList: [{"_id":"61a5713424d5d647a804fa07","restaurant_id":2,"restaurant_image_url":"17d6ae939c71.png","restaurant_name":"测试商铺","formatted_created_at":"2021-11-30 08:32","order_time":1638232372652,"time_pass":21,"total_amount":64,"total_quantity":1,"unique_id":6,"id":6,"user_id":2,"address_id":2,"__v":0,"top_show":0,"timeline_node":{"in_processing":0,"actions":[]},"status_code":0,"status_bar":{"color":"f60","image_type":"","sub_title":"15分钟内支付","title":"等待支付"},"restaurant_type":0,"remind_reply_count":0,"rated_point":0,"pay_remain_seconds":0,"operation_upload_photo":0,"operation_rebuy":2,"operation_rate":0,"operation_pay":0,"operation_confirm":0,"is_pindan":0,"is_new_pay":1,"is_deletable":1,"is_brand":0,"basket":{"pindan_map":[],"packing_fee":{"price":0,"quantity":1,"name":"餐盒","category_id":1},"group":[[{"name":"超级美食","price":20,"quantity":3,"_id":"61a5711224d5d647a804fa05","specs":[""],"new_specs":[],"attrs":[]}]],"extra":[],"deliver_fee":{"quantity":1,"price":4,"name":"配送费","category_id":2},"abandoned_extra":[]}}],
+      userInfo: userInfo
       // offset: 0,
       // preventRepeat: false, //防止重复获取
       // showLoading: true, //显示加载动画
       // imgBaseUrl,
     };
   },
-  // mounted() {
-  //   this.initData();
-  // },
+  mounted() {
+    this.initData();
+  },
   // mixins: [loadMore],
   components: {
     headTop,
@@ -104,18 +104,21 @@ export default {
   // computed: {
   //   ...mapState(["userInfo", "geohash"]),
   // },
-  // methods: {
+  methods: {
   //   ...mapMutations(["SAVE_ORDER"]),
   //   //初始化获取信息
-  //   async initData() {
-  //     if (this.userInfo && this.userInfo.user_id) {
-  //       let res = await getOrderList(this.userInfo.user_id, this.offset);
-  //       this.orderList = [...res];
-  //       this.hideLoading();
-  //     } else {
-  //       this.hideLoading();
-  //     }
-  //   },
+    async initData() {
+      if (this.userInfo && this.userInfo.id) {
+        let res = await getOrderList({ user_id: this.userInfo.id });
+        this.orderList = res.row
+        // this.orderList = [...res];
+        // console.log('res---->', res)
+        // this.hideLoading();
+      } else {
+        // console.log('res------->', this.userInfo)
+        // this.hideLoading();
+      }
+    },
   //   //加载更多
   //   async loaderMore() {
   //     if (this.preventRepeat) {
@@ -133,17 +136,17 @@ export default {
   //     }
   //     this.preventRepeat = false;
   //   },
-  //   //显示详情页
-  //   showDetail(item) {
-  //     this.SAVE_ORDER(item);
-  //     this.preventRepeat = false;
-  //     this.$router.push("/order/orderDetail");
-  //   },
+    //显示详情页
+    showDetail(item) {
+      this.preventRepeat = false;
+      window.sessionStorage.setItem('order', JSON.stringify(item))
+      this.$router.push("/confirm-order");
+    },
   //   //生产环境与发布环境隐藏loading方式不同
   //   hideLoading() {
   //     this.showLoading = false;
   //   },
-  // },
+  },
   // watch: {
   //   userInfo: function (value) {
   //     if (value && value.user_id && !this.orderList) {
@@ -168,6 +171,7 @@ export default {
 }
 .order_list_ul {
   padding-top: 1.95rem;
+  padding-bottom: 1.95rem;
   .order_list_li {
     background-color: #fff;
     display: flex;

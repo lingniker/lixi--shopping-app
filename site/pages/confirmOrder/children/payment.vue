@@ -75,6 +75,10 @@ import alertTip from "@site/components/common/alertTip";
 
 export default {
   data() {
+    var order = {};
+    if (window.sessionStorage.getItem('order')) {
+      order = JSON.parse(window.sessionStorage.getItem('order'))
+    }
     return {
       payDetail: false, //付款信息详情
       showAlert: false,
@@ -86,6 +90,7 @@ export default {
       userInfo: {},
       shopid: "123",
       cartPrice: 123,
+      order: order
     };
   },
   components: {
@@ -129,15 +134,15 @@ export default {
     // ]),
     //初始化信息
     async initData() {
-      this.payDetail = await payRequest(
-        this.orderMessage.order_id,
-        this.userInfo.user_id
-      );
-      if (this.payDetail.message) {
-        this.showAlert = true;
-        this.alertText = this.payDetail.message;
-        return;
-      }
+      // this.payDetail = await payRequest(
+      //   this.orderMessage.order_id,
+      //   this.userInfo.user_id
+      // );
+      // if (this.payDetail.message) {
+      //   this.showAlert = true;
+      //   this.alertText = this.payDetail.message;
+      //   return;
+      // }
     },
     //倒计时
     remainingTime() {
@@ -160,8 +165,11 @@ export default {
     //关闭提示框，跳转到订单列表页
     closeTipFun() {
       this.showAlert = false;
+      payRequest(this.order).then((res)=>{
+        console.log('pay res', res)
+        this.$router.push("/order");
+      })
       // if (this.gotoOrders) {
-      //   this.$router.push("/order");
       // }
     },
   },
