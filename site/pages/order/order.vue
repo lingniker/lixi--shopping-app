@@ -6,7 +6,7 @@
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
           <!-- :src="imgBaseUrl + item.restaurant_image_url" -->
         <img
-          src="https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fimg.sccnn.com%2Fbimg%2F338%2F63325.jpg&refer=http%3A%2F%2Fimg.sccnn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=jpeg?sec=1640804017&t=36da07beaf303c4c2ad2295271dc96e3"
+          :src="'http://127.0.0.1:8035/img/' + item.shop_img_path"
           class="restaurant_image"
         />
         <section class="order_item_right">

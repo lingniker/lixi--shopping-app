@@ -232,6 +232,7 @@ export default {
       foods.address_id = order.shop_address_id 
       foods.price = order.shop_price
       foods.price = order.shop_price_total
+      foods.img_path = order.shop_img_path
     }
     // console.log('foods', foods)
     return {
@@ -395,6 +396,7 @@ export default {
             user_address_name: this.userInfo.address_name,
             shop_id: this.foods.id,
             shop_name: this.foods.shop_name,
+            shop_img_path: this.foods.img_path,
             shop_address_name: this.foods.address_name,
             shop_address_id: this.foods.address_id,
             shop_price: this.foods.price,
