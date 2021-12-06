@@ -22,7 +22,7 @@
                     ></use>
                   </svg>
                 </h4>
-                <p class="order_time">{{ item.created_at }}</p>
+                <p class="order_time">{{ parseTime(item.created_at) }}</p>
               </section>
               <p :class="'order_status status-' + item.send_status">
                 {{ item.send_label }}

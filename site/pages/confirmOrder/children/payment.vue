@@ -159,7 +159,7 @@ export default {
     //确认付款
     confrimPay() {
       this.showAlert = true;
-      this.alertText = "当前环境无法支付，请打开官方APP进行付款";
+      this.alertText = "当前环境只能使用零钱付款,确认付款？";
       this.gotoOrders = true;
     },
     //关闭提示框，跳转到订单列表页

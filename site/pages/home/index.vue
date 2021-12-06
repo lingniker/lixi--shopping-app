@@ -55,21 +55,6 @@ export default {
   },
 
   mounted(){
-    // // 获取当前城市
-    // cityGuess().then(res => {
-    //     this.guessCity = res.name;
-    //     this.guessCityid = res.id;
-    // })
-
-    // //获取热门城市
-    // hotcity().then(res => {
-    //     this.hotcity = res;
-    // })
-
-    // //获取所有城市
-    // groupcity().then(res => {
-    //     this.groupcity = res;
-    // })
   },
 
   components:{

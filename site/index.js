@@ -11,6 +11,8 @@ import store from './store/index'
 
 import './style/index.scss'
 import 'highlight.js/styles/color-brewer.css'
+import { parseTime } from "./utils/ruoyi";
+
 
 import getData from './api/getData';
 
@@ -20,6 +22,7 @@ var app = createApp(App);
 app.component('DemoBlock', demoBlock)
 app.config.globalProperties.$icon = icon
 app.config.globalProperties.getData = getData
+app.config.globalProperties.parseTime = parseTime
 app.use(store).use(router).use(ElementPlus)
 
 app.mount('#app');

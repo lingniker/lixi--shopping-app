@@ -77,7 +77,7 @@
           <img
             :src="imgBaseUrl + foods.img_path"
           />
-          <span> {{ foods.describe }}</span>
+          <span class="shop_name"> {{ foods.shop_name }}</span>
         </header>
         <ul class="food_list_ul" v-if="checkoutData.cart.groups">
           <li
@@ -765,5 +765,10 @@ export default {
 .router-slid-leave-active {
   transform: translate3d(2rem, 0, 0);
   opacity: 0;
+}
+
+.shop_name{
+  display: inline-block;
+  margin-left: 10px;
 }
 </style>

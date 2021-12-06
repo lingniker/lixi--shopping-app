@@ -353,7 +353,7 @@ export default {
       .menu_food_img {
         margin-right: 0.4rem;
         img {
-          @include wh(2.5rem, 2.5rem);
+          @include wh(3rem, 3rem);
           display: block;
         }
       }
