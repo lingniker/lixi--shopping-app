@@ -92,11 +92,11 @@
         </ul>
         <div class="food_item_style" v-if="checkoutData.cart.extra">
           <p class="food_name ellipsis">
-            {{ checkoutData.cart.extra[0].name }}
+            发货地址
           </p>
           <div class="num_price">
             <span></span>
-            <span>¥ {{ checkoutData.cart.extra[0].price }}</span>
+            <span> {{ foods.address_name }} </span>
           </div>
         </div>
         <div class="food_item_style">
@@ -109,7 +109,7 @@
         <div class="food_item_style total_price">
           <p class="food_name ellipsis">订单 ¥{{ foods.price }}</p>
           <div class="num_price">
-            <span>待支付 ¥{{ foods.price }}</span>
+            <span>{{ order_status[order.send_status] }} ¥{{ foods.price }}</span>
           </div>
         </div>
       </section>
@@ -152,8 +152,8 @@
         </div>
       </section>
       <section class="confrim_order">
-        <p>待支付 ¥{{ foods.price }}</p>
-        <p @click="confrimOrder">{{ order.order_status === '2' ? (order.seed_status === '2' ? '待发货' : '订单完成') : '确认下单' }}</p>
+        <p>{{ order_status[order.send_status] }} ¥{{ foods.price }}</p>
+        <p @click="confrimOrder">{{ status[order.send_status] }}</p>
       </section>
       <transition name="fade">
         <div class="cover" v-if="showPayWay" @click="showPayWayFun"></div>
@@ -190,7 +190,7 @@
     <!-- <loading v-if="showLoading"></loading> -->
     <alert-tip
       v-if="showAlert"
-      @closeTip="showAlert = false"
+      @closeTip="closeTip"
       :alertText="alertText"
     ></alert-tip>
     <transition name="router-slid" mode="out-in">
@@ -209,7 +209,8 @@ import {
   getAddress,
   placeOrders,
   getAddressList,
-  validateOrders
+  validateOrders,
+  update
 } from "@site/api/getData";
 import { imgBaseUrl } from "@site/config/env";
 
@@ -226,17 +227,29 @@ export default {
     var order = {};
     if (window.sessionStorage.getItem('order')) {
       order = JSON.parse(window.sessionStorage.getItem('order'))
-      foods.id = order.shop_id
-      foods.shop_name = order.shop_name 
-      foods.address_name = order.shop_address_name 
-      foods.address_id = order.shop_address_id 
-      foods.price = order.shop_price
-      foods.price = order.shop_price_total
-      foods.img_path = order.shop_img_path
+      if (order.id) {
+        foods.id = order.shop_id
+        foods.shop_name = order.shop_name 
+        foods.address_name = order.shop_address_name 
+        foods.address_id = order.shop_address_id 
+        foods.price = order.shop_price
+        foods.price = order.shop_price_total
+        foods.img_path = order.shop_img_path
+      }
     }
     // console.log('foods', foods)
     return {
       geohash: "", //geohash位置信息
+      status:{
+        "1": '待付款',
+        "2": '待发货',
+        "3": '待收货',
+        "4": '订单完成' 
+      },
+      order_status:{
+        "1": '待付款',
+        "2": '已支付'
+      },
       shopId: null, //商店id值
       showLoading: true, //显示加载动画
       checkoutData: {"__v":0,"id":14,"delivery_reach_time":"14:27","sig":"947701","_id":"61a5bcfa24d5d647a804fa08","is_support_ninja":1,"is_support_coupon":false,"deliver_times_v2":[],"deliver_times":[],"payments":[{"description":"（商家仅支持在线支付）","disabled_reason":"","id":1,"name":"在线支付","select_state":1,"_id":"61a5bcfa24d5d647a804fa0a","promotion":[],"is_online_payment":true},{"description":"（商家不支持货到付款）","disabled_reason":"商家仅支持在线支付","id":2,"name":"货到付款","select_state":-1,"_id":"61a5bcfa24d5d647a804fa09","promotion":[],"is_online_payment":false}],"invoice":{"status_text":"不需要开发票","is_available":true},"cart":{"id":14,"deliver_amount":4,"is_deliver_by_fengniao":true,"original_total":24,"phone":"18378743666","restaurant_id":2,"restaurant_info":{"_id":"61a495e824d5d647a804f997","name":"测试商铺","address":"上海市浦东新区德州路198号","id":2,"latitude":31.167419,"longitude":121.497938,"location":[121.497938,31.167419],"phone":"18378743666","category":"快餐便当/简餐","__v":0,"supports":[{"description":"已加入“外卖保”计划，食品安全有保障","icon_color":"999999","icon_name":"保","id":7,"name":"外卖保","_id":"61a495e824d5d647a804f99a"},{"description":"准时必达，超时秒赔","icon_color":"57A9FF","icon_name":"准","id":9,"name":"准时达","_id":"61a495e824d5d647a804f999"},{"description":"该商家支持开发票，请在下单时填写好发票抬头","icon_color":"999999","icon_name":"票","id":4,"name":"开发票","_id":"61a495e824d5d647a804f998"}],"status":0,"recent_order_num":903,"rating_count":492,"rating":4,"promotion_info":"我们的商铺","piecewise_agent_fee":{"tips":"配送费约¥5"},"opening_hours":["05:30/23:30"],"license":{"catering_service_license_image":"17d6ae978303.png","business_license_image":"17d6ae948c92.png"},"is_new":true,"is_premium":true,"image_path":"17d6ae939c71.png","identification":{"registered_number":"","registered_address":"","operation_period":"","licenses_scope":"","licenses_number":"","licenses_date":"","legal_person":"","identificate_date":null,"identificate_agency":"","company_name":""},"float_minimum_order_amount":20,"float_delivery_fee":5,"distance":"","order_lead_time":"","description":"测试使用商铺","delivery_mode":{"color":"57A9FF","id":1,"is_solid":true,"text":"蜂鸟专送"},"activities":[{"icon_name":"减","name":"满减优惠","description":"满30减5，满60减8","icon_color":"f07373","id":1,"_id":"61a495e824d5d647a804f99b"}]},"restaurant_minimum_order_amount":20,"total":24,"service_fee_explanation":0,"restaurant_status":1,"promise_delivery_time":0,"ontime_status":0,"must_pay_online":0,"must_new_user":0,"is_ontime_available":0,"is_online_paid":1,"is_address_too_far":false,"extra":[{"description":"","_id":"61a5bcfa24d5d647a804fa0b","type":0,"quantity":1,"price":0,"name":"餐盒"}],"groups":[[{"id":1,"name":"超级美食","packing_fee":0,"price":20,"quantity":1,"sku_id":1,"stock":1000,"_id":"61a5bcfa24d5d647a804fa0c","specs":[""],"new_specs":[],"extra":[null],"attrs":[]}]]}}, //数据返回值
@@ -384,8 +397,17 @@ export default {
             if (this.order.order_status === '1') { // 1未支付
               this.$router.push("/confirm-order/payment");
             } else {
-              if (this.order.seed == '3') {
-                console.log('订单完成')
+              if (this.order.send_status == '2') {
+                console.log('待发货')
+                this.showAlert = true;
+                this.alertText = "你好，你的订单商家正在处理，即将发货，请耐心等待。";
+              } else if (this.order.send_status == '3') {
+                console.log('确定收到货物')
+                this.showAlert = true;
+                this.alertText = "你好，商品是否送到你手上。请确认";
+              } else if (this.order.send_status == '4') {
+                this.showAlert = true;
+                this.alertText = "你好，你的订单已完成。";
               }
             }
           } else {
@@ -452,6 +474,15 @@ export default {
       //   this.$router.push("/confirmOrder/payment");
       // }
     },
+    closeTip() {
+      this.showAlert = false
+      if (this.order.send_status == '3') {
+        update(this.order).then((res)=>{
+          console.log('res', res)
+          this.order.send_status = '4'
+        })
+      }
+    }
   },
   watch: {
     userInfo: function (value) {

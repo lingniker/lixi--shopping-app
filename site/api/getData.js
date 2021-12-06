@@ -520,7 +520,7 @@ export const getShop = (data) => {
 	return request({
 		url: '/shop',
 		method: 'get',
-		data: data
+		params: data
 	})
 }
 
@@ -554,6 +554,15 @@ export function payRequest(query) {
   return request({
     url: '/order/pay',
     method: 'POST',
+    data: query
+  })
+}
+
+// 查询用户列表
+export function update(query) {
+  return request({
+    url: '/order/update',
+    method: 'post',
     data: query
   })
 }

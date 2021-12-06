@@ -1145,3 +1145,10 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.rating_page{
+  overflow: auto;
+  padding-bottom: 2.5rem;
+}
+</style>

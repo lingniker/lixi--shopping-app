@@ -24,7 +24,7 @@
                 </h4>
                 <p class="order_time">{{ item.created_at }}</p>
               </section>
-              <p class="order_status">
+              <p :class="'order_status status-' + item.send_status">
                 {{ item.send_label }}
               </p>
             </header>
@@ -109,8 +109,8 @@ export default {
   //   //初始化获取信息
     async initData() {
       if (this.userInfo && this.userInfo.id) {
-        let res = await getOrderList({ user_id: this.userInfo.id });
-        this.orderList = res.row
+        let res = await getOrderList({ _user_id: this.userInfo.id });
+        this.orderList = res
         // this.orderList = [...res];
         // console.log('res---->', res)
         // this.hideLoading();
@@ -253,5 +253,20 @@ export default {
 .router-slid-leave-active {
   transform: translate3d(2rem, 0, 0);
   opacity: 0;
+}
+</style>
+
+<style lang="scss">
+.status-1 {
+  color: #409eff !important;
+}
+.status-2 {
+  color: #67c23a !important;
+}
+.status-3 {
+  color: #e6a23c !important;
+}
+.status-4 {
+  color: #f56c6c !important;
 }
 </style>

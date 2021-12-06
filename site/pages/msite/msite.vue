@@ -1,5 +1,9 @@
 <template>
   <div>
+    <form class="search_form">
+      <input type="search" name="search" placeholder="请输入商家或美食名称" class="search_input" v-model="searchValue" @input="checkInput">
+      <input type="submit" name="submit" value="搜索" class="search_submit" @click.prevent="searchTarget('')">
+    </form>
     <section class="menu_right" ref="menuFoodList">
       <ul>
         <li v-for="(item, index) in menuList" :key="index">
@@ -22,13 +26,13 @@
             :key="foodindex"
             class="menu_detail_list"
           >
-          <!-- image_path: foods.image_path,
-                  description: foods.description,
-                  month_sales: foods.month_sales,
-                  name: foods.name,
-                  rating: foods.rating,
-                  rating_count: foods.rating_count,
-                  satisfy_rate: foods.satisfy_rate, -->
+          <!--  image_path: foods.image_path,
+            description: foods.description,
+            month_sales: foods.month_sales,
+            name: foods.name,
+            rating: foods.rating,
+            rating_count: foods.rating_count,
+            satisfy_rate: foods.satisfy_rate, -->
             <div
               tag="div"
               class="menu_detail_link"
@@ -146,6 +150,7 @@ export default {
       foodTypes: [], // 食品分类列表
       hasGetData: false, //是否已经获取地理位置数据，成功之后再获取商铺列表信息
       imgBaseUrl: "https://fuss10.elemecdn.com", //图片域名地址
+      searchValue: ''
     };
   },
   async beforeMount() {
@@ -166,27 +171,7 @@ export default {
     // this.hasGetData = true;
   },
   mounted() {
-    getShop({}).then((res)=>{
-      this.menuList[0].foods = res.row
-    })
-  //   //获取导航食品类型列表
-  //   msiteFoodTypes(this.geohash)
-  //     .then((res) => {
-  //       let resLength = res.length;
-  //       let resArr = [...res]; // 返回一个新的数组
-  //       let foodArr = [];
-  //       for (let i = 0, j = 0; i < resLength; i += 8, j++) {
-  //         foodArr[j] = resArr.splice(0, 8);
-  //       }
-  //       this.foodTypes = foodArr;
-  //     })
-  //     .then(() => {
-  //       //初始化swiper
-  //       new Swiper(".swiper-container", {
-  //         pagination: ".swiper-pagination",
-  //         loop: true,
-  //       });
-  //     });
+    this.getList({})
   },
   components: {
     headTop,
@@ -195,6 +180,17 @@ export default {
   },
   computed: {},
   methods: {
+    getList(query) {
+      getShop(query).then((res)=>{
+        this.menuList[0].foods = res.data
+      })
+    },
+    searchTarget() {
+      this.getList({ shop_name: this.searchValue, curren_page: 1, per_page: 100 })
+    },
+    checkInput() {
+      this.getList({ shop_name: this.searchValue, curren_page: 1, per_page: 100 })
+    },
     // ...mapMutations(["RECORD_ADDRESS", "SAVE_GEOHASH"]),
     // 解码url地址，求去restaurant_category_id值
     getCategoryId(url) {
@@ -209,7 +205,7 @@ export default {
     },
     goToShop(foods){
       window.sessionStorage.setItem('foods', JSON.stringify(foods))
-      window.sessionStorage.setItem('order', '')
+      window.sessionStorage.setItem('order', JSON.stringify({send_status: 1}))
       this.$router.push('shop')
     }
   },
@@ -451,6 +447,33 @@ export default {
         }
       }
     }
+  }
+}
+.search_form{
+  background-color: #fff;
+  padding: 0.5rem;
+  display: flex;
+  input{
+    height: 1.5rem;
+  }
+  .search_input{
+    flex: 4;
+    border: 0.025rem solid $bc;
+    @include sc(0.65rem, #333);
+    border-radius: 0.125rem;
+    background-color: #f2f2f2;
+    font-weight: bold;
+    padding: 0 0.25rem;
+  }
+  .search_submit{
+    flex: 1;
+    border: 0.025rem solid $blue;
+    margin-left: .2rem;
+    @include sc(0.65rem, #fff);
+    border-radius: 0.125rem;
+    background-color: $blue;
+    font-weight: bold;
+    padding: 0 0.25rem;
   }
 }
 </style>
