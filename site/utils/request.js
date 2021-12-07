@@ -1,12 +1,14 @@
 import axios from 'axios'
 import errorCode from './error-code'
 
+import { baseApi, publicPath } from '@site/config'
+
 axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
 // 创建axios实例
 const service = axios.create({
   // axios中请求配置有baseURL选项，表示请求URL公共部分
   // baseURL: '/dev-api',
-  baseURL: 'http://127.0.0.1:8035/',
+  baseURL: baseApi,
   // 超时
   timeout: 10000
 })
@@ -18,7 +20,7 @@ service.interceptors.request.use(config => {
   // if (getToken() && !isToken) {
   //   config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   // }
-  var userInfoStr = window.sessionStorage.getItem('userInfo')
+  var userInfoStr = window.sessionStorage.getItem('appUserInfo')
   // get请求映射params参数
   if (userInfoStr) {
     var userInfo = JSON.parse(userInfoStr)
@@ -36,7 +38,7 @@ service.interceptors.request.use(config => {
     }
     return config
   } else {
-    location.href = '/#/login'
+    location.href = publicPath + '#/login'
     return config
   }
 }, error => {

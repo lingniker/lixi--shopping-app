@@ -566,7 +566,7 @@
     <div class="rating_page">
         <head-top :head-title="name" go-back='true'></head-top>
         <section class="header_img">
-            <img :src="imgBaseUrl + img_path" class="food_img">
+            <img :src="baseImgPath + img_path" class="food_img">
             <div class="cover"></div>
         </section>
         <p class="description">{{description}}</p>
@@ -673,7 +673,7 @@ import loading from "@site/components/common/loading";
 import buyCart from "@site/components/common/buyCart";
 import ratingStar from "@site/components/common/ratingStar";
 import { loadMore, getImgPath } from "@site/components/common/mixin";
-import { imgBaseUrl } from "@site/config/env";
+import { baseImgPath } from "@site/config";
 import BScroll from "better-scroll";
 import headTop from '@site/components/header/head'
 
@@ -716,7 +716,7 @@ export default {
       elLeft: 0, //当前点击加按钮在网页中的绝对top值
       elBottom: 0, //当前点击加按钮在网页中的绝对left值
       ratingScroll: null, //评论页Scroll
-      imgBaseUrl,
+      baseImgPath,
       "latitude": '',
       "longitude": '',
       "cartList":[],

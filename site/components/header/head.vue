@@ -44,8 +44,8 @@
 export default {
   data() {
     var userInfo = null
-    if(window.sessionStorage.getItem('userInfo')){
-      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    if(window.sessionStorage.getItem('appUserInfo')){
+      userInfo = JSON.parse(window.sessionStorage.getItem('appUserInfo'))
     }
     return {
       userInfo

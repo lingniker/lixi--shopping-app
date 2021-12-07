@@ -39,7 +39,7 @@
               @click="() => { goToShop(foods) }"
             >
               <section class="menu_food_img">
-                <img :src="'http://127.0.0.1:8035/img/' + foods.img_path" />
+                <img :src="baseImgPath + foods.img_path" />
               </section>
               <section class="menu_food_description">
                 <h3 class="food_description_head">
@@ -75,6 +75,8 @@ import shopList from "@site/components/common/shoplist";
 import { msiteAddress, msiteFoodTypes, cityGuess, getShop } from "@site/api/getData";
 import "@site/plugins/swiper.min.js";
 import "@site/style/swiper.min.css";
+import { baseImgPath } from '@site/config'
+
 
 export default {
   data() {
@@ -150,7 +152,8 @@ export default {
       foodTypes: [], // 食品分类列表
       hasGetData: false, //是否已经获取地理位置数据，成功之后再获取商铺列表信息
       imgBaseUrl: "https://fuss10.elemecdn.com", //图片域名地址
-      searchValue: ''
+      searchValue: '',
+      baseImgPath
     };
   },
   async beforeMount() {

@@ -167,6 +167,9 @@ export default {
       this.showAlert = false;
       payRequest(this.order).then((res)=>{
         console.log('pay res', res)
+        if (res && res.id) {
+          window.sessionStorage.setItem('appUserInfo', JSON.stringify(res))
+        }
         this.$router.push("/order");
       })
       // if (this.gotoOrders) {

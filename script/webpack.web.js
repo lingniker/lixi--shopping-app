@@ -134,6 +134,7 @@ var config = {
     new webpack.DefinePlugin({
       __VUE_OPTIONS_API__: JSON.stringify(true),
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      "process.env": { VUE_APP_BASE_API: `'http://localhost:8080'`, NODE_ENV: '"development"' }
     }),
     new VueLoaderPlugin()
   ]

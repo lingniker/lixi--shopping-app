@@ -201,10 +201,9 @@ import { getImgPath } from "@site/components/common/mixin";
 export default {
   data() {
     var userInfo = {};
-    if (window.sessionStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    if (window.sessionStorage.getItem('appUserInfo')) {
+      userInfo = JSON.parse(window.sessionStorage.getItem('appUserInfo'))
     }
-    console.log('userInfo', userInfo)
     return {
       profiletitle: "我的",
       username: userInfo.user_name ? userInfo.user_name : "登录/注册", //用户名

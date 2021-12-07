@@ -4,9 +4,8 @@
      <!-- v-load-more="loaderMore" -->
     <ul class="order_list_ul">
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
-          <!-- :src="imgBaseUrl + item.restaurant_image_url" -->
         <img
-          :src="'http://127.0.0.1:8035/img/' + item.shop_img_path"
+          :src="baseImgPath + item.shop_img_path"
           class="restaurant_image"
         />
         <section class="order_item_right">
@@ -75,20 +74,22 @@ import { getOrderList } from "@site/api/getData";
 // import { loadMore } from "@site/components/common/mixin";
 // import { imgBaseUrl } from "@site/config/env";
 
+import { baseImgPath } from '@site/config'
+
 export default {
   data() {
     var userInfo = null;
-    if (window.sessionStorage.getItem('userInfo')) {
-      userInfo = JSON.parse(window.sessionStorage.getItem('userInfo'))
+    if (window.sessionStorage.getItem('appUserInfo')) {
+      userInfo = JSON.parse(window.sessionStorage.getItem('appUserInfo'))
     }
     return {
       // orderList: null, //订单列表
-      orderList: [{"_id":"61a5713424d5d647a804fa07","restaurant_id":2,"restaurant_image_url":"17d6ae939c71.png","restaurant_name":"测试商铺","formatted_created_at":"2021-11-30 08:32","order_time":1638232372652,"time_pass":21,"total_amount":64,"total_quantity":1,"unique_id":6,"id":6,"user_id":2,"address_id":2,"__v":0,"top_show":0,"timeline_node":{"in_processing":0,"actions":[]},"status_code":0,"status_bar":{"color":"f60","image_type":"","sub_title":"15分钟内支付","title":"等待支付"},"restaurant_type":0,"remind_reply_count":0,"rated_point":0,"pay_remain_seconds":0,"operation_upload_photo":0,"operation_rebuy":2,"operation_rate":0,"operation_pay":0,"operation_confirm":0,"is_pindan":0,"is_new_pay":1,"is_deletable":1,"is_brand":0,"basket":{"pindan_map":[],"packing_fee":{"price":0,"quantity":1,"name":"餐盒","category_id":1},"group":[[{"name":"超级美食","price":20,"quantity":3,"_id":"61a5711224d5d647a804fa05","specs":[""],"new_specs":[],"attrs":[]}]],"extra":[],"deliver_fee":{"quantity":1,"price":4,"name":"配送费","category_id":2},"abandoned_extra":[]}}],
-      userInfo: userInfo
+      orderList: [],
+      userInfo: userInfo,
       // offset: 0,
       // preventRepeat: false, //防止重复获取
       // showLoading: true, //显示加载动画
-      // imgBaseUrl,
+      baseImgPath,
     };
   },
   mounted() {

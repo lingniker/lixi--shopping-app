@@ -21,6 +21,7 @@ var config = {
   output: {
     path: path.join(__dirname, "../dist"),
     filename: 'index.js',
+    publicPath: '/shopping-app/',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.vue', '.json'],
@@ -136,6 +137,7 @@ var config = {
     new webpack.DefinePlugin({
       __VUE_OPTIONS_API__: JSON.stringify(true),
       __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+      "process.env": { VUE_APP_BASE_API: `'http://localhost:8080'`, NODE_ENV: '"production"' }
     }),
     new VueLoaderPlugin(),
     new MiniCssExtractPlugin({

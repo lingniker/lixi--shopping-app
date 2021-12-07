@@ -224,7 +224,7 @@ export default {
         if (!this.loginWay) this.getCaptchaCode();
       } else {
         // this.RECORD_USERINFO(this.userInfo);
-        window.sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo))
+        window.sessionStorage.setItem('appUserInfo', JSON.stringify(this.userInfo))
         this.$router.go(-1);
       }
     },
