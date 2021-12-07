@@ -1,7 +1,6 @@
  <template>
   <div class="order_page">
     <head-top head-title="订单列表" go-back="true"></head-top>
-     <!-- v-load-more="loaderMore" -->
     <ul class="order_list_ul">
       <li class="order_list_li" v-for="item in orderList" :key="item.id">
         <img
@@ -39,41 +38,18 @@
               v-if="item.send_label == '等待支付'"
               :time="item.time_pass"
             ></compute-time>
-            <!-- <router-link
-              :to="{
-                path: '/shop',
-                query: { geohash, id: item.restaurant_id },
-              }"
-              tag="span"
-              class="buy_again"
-              v-else
-              >再来一单</router-link
-            > -->
           </div>
         </section>
       </li>
     </ul>
     <foot-guide></foot-guide>
-    <!-- <transition name="loading">
-      <loading v-show="showLoading"></loading>
-    </transition>
-    <transition name="router-slid" mode="out-in">
-      <router-view></router-view>
-    </transition> -->
   </div>
 </template>
 
 <script>
-// import { mapState, mapMutations } from "vuex";
 import headTop from "@site/components/header/head";
-// import computeTime from "@site/components/common/computeTime";
-// import loading from "@site/components/common/loading";
-// import { getImgPath } from "@site/components/common/mixin";
 import footGuide from "@site/components/footer/footGuide";
 import { getOrderList } from "@site/api/getData";
-// import { loadMore } from "@site/components/common/mixin";
-// import { imgBaseUrl } from "@site/config/env";
-
 import { baseImgPath } from '@site/config'
 
 export default {
@@ -83,78 +59,34 @@ export default {
       userInfo = JSON.parse(window.sessionStorage.getItem('appUserInfo'))
     }
     return {
-      // orderList: null, //订单列表
       orderList: [],
       userInfo: userInfo,
-      // offset: 0,
-      // preventRepeat: false, //防止重复获取
-      // showLoading: true, //显示加载动画
       baseImgPath,
     };
   },
   mounted() {
     this.initData();
   },
-  // mixins: [loadMore],
   components: {
     headTop,
     footGuide,
-    // loading,
-    // computeTime,
   },
-  // computed: {
-  //   ...mapState(["userInfo", "geohash"]),
-  // },
   methods: {
-  //   ...mapMutations(["SAVE_ORDER"]),
   //   //初始化获取信息
     async initData() {
       if (this.userInfo && this.userInfo.id) {
         let res = await getOrderList({ _user_id: this.userInfo.id });
-        this.orderList = res
-        // this.orderList = [...res];
-        // console.log('res---->', res)
-        // this.hideLoading();
+        this.orderList = resizeTo
       } else {
-        // console.log('res------->', this.userInfo)
-        // this.hideLoading();
       }
     },
-  //   //加载更多
-  //   async loaderMore() {
-  //     if (this.preventRepeat) {
-  //       return;
-  //     }
-  //     this.preventRepeat = true;
-  //     this.showLoading = true;
-  //     this.offset += 10;
-  //     //获取信息
-  //     let res = await getOrderList(this.userInfo.user_id, this.offset);
-  //     this.orderList = [...this.orderList, ...res];
-  //     this.hideLoading();
-  //     if (res.length < 10) {
-  //       return;
-  //     }
-  //     this.preventRepeat = false;
-  //   },
     //显示详情页
     showDetail(item) {
       this.preventRepeat = false;
       window.sessionStorage.setItem('order', JSON.stringify(item))
       this.$router.push("/confirm-order");
     },
-  //   //生产环境与发布环境隐藏loading方式不同
-  //   hideLoading() {
-  //     this.showLoading = false;
-  //   },
-  },
-  // watch: {
-  //   userInfo: function (value) {
-  //     if (value && value.user_id && !this.orderList) {
-  //       this.initData();
-  //     }
-  //   },
-  // },
+  }
 };
 </script>
   

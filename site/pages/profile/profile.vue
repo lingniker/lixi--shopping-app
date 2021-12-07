@@ -53,13 +53,6 @@
             >
             <span class="info-data-bottom">我的余额</span>
           </div>
-          <!-- <div to="/benefit" tag="li" class="info-data-link">
-            <span class="info-data-top"
-              ><b>{{ count }}</b
-              >个</span
-            >
-            <span class="info-data-bottom">我的优惠</span>
-          </div> -->
           <div to="/points" tag="li" class="info-data-link">
             <span class="info-data-top"
               ><b>{{ pointNumber }}</b
@@ -227,8 +220,6 @@ export default {
   },
 
   computed: {
-    // ...mapState(["userInfo"]),
-    //后台会返回两种头像地址格式，分别处理
     imgpath: function () {
       let path;
       if (this.avatar.indexOf("/") !== -1) {
@@ -236,13 +227,11 @@ export default {
       } else {
         path = this.getImgPath(this.avatar);
       }
-      // this.SAVE_AVANDER(path);
       return path;
     },
   },
 
   methods: {
-    // ...mapMutations(["SAVE_AVANDER"]),
     initData() {
       if (this.userInfo && this.userInfo.user_id) {
         this.avatar = this.userInfo.avatar;
