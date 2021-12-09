@@ -90,6 +90,7 @@ import headTop from "../../components/header/head";
 import alertTip from "../../components/common/alertTip";
 // import { localapi, proapi, imgBaseUrl } from "src/config/env";
 import { mapState, mapMutations } from "vuex";
+import md5 from "md5-node";
 import {
   mobileCode,
   checkExsis,
@@ -212,7 +213,7 @@ export default {
         //用户名登录
         this.userInfo = await accountLogin(
           this.userAccount,
-          this.passWord,
+          md5(this.passWord),
           this.codeNumber
         );
       }
@@ -225,7 +226,7 @@ export default {
       } else {
         // this.RECORD_USERINFO(this.userInfo);
         window.sessionStorage.setItem('appUserInfo', JSON.stringify(this.userInfo))
-        this.$router.go(-1);
+        this.$router.push('./msite');
       }
     },
     closeTip() {
