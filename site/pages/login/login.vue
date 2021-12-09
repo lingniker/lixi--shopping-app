@@ -226,7 +226,7 @@ export default {
       } else {
         // this.RECORD_USERINFO(this.userInfo);
         window.sessionStorage.setItem('appUserInfo', JSON.stringify(this.userInfo))
-        this.$router.push('./msite');
+        this.$router.push({ name: 'msite' } );
       }
     },
     closeTip() {
