@@ -76,7 +76,7 @@ export default {
     async initData() {
       if (this.userInfo && this.userInfo.id) {
         let res = await getOrderList({ _user_id: this.userInfo.id });
-        this.orderList = resizeTo
+        this.orderList = res.data
       } else {
       }
     },
